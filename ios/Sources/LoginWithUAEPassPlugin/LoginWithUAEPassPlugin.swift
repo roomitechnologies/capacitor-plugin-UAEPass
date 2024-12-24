@@ -1,23 +1,33 @@
-import Foundation
-import Capacitor
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
  * here: https://capacitorjs.com/docs/plugins/ios
  */
-@objc(LoginWithUAEPassPlugin)
-public class LoginWithUAEPassPlugin: CAPPlugin, CAPBridgedPlugin {
-    public let identifier = "LoginWithUAEPassPlugin"
-    public let jsName = "LoginWithUAEPass"
-    public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "echo", returnType: CAPPluginReturnPromise)
-    ]
-    private let implementation = LoginWithUAEPass()
+import Foundation
+import Capacitor
+import UAEPassClient
 
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
-        call.resolve([
-            "value": implementation.echo(value)
-        ])
+@objc(UAEPassPlugin)
+public class UAEPassPlugin: CAPPlugin {
+
+    @objc func login(_ call: CAPPluginCall) {
+        let redirectUri = call.getString("redirectUri") ?? "roomi://login"
+        
+        UAEPassClient.shared.configure(clientId: "sandbox_stage", redirectUri: redirectUri)
+        UAEPASSRouter.shared.spConfig = SPConfig(
+            redirectUriLogin: redirectUri,
+            scope: "urn:uae:digitalid:profile:general",
+            state: UUID().uuidString,
+            successSchemeURL: redirectUri,
+            failSchemeURL: "roomi://fail-login"
+        )
+        
+        // UAE Pass Login Process
+        call.resolve(["token": "dummy-ios-token"])
+    }
+    
+    @objc func logout(_ call: CAPPluginCall) {
+        call.resolve()
     }
 }
+

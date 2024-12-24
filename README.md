@@ -11,9 +11,48 @@ npx cap sync
 
 ## API
 
-<docgen-index></docgen-index>
+<docgen-index>
+
+* [`login(...)`](#login)
+* [`logout()`](#logout)
+* [Interfaces](#interfaces)
+
+</docgen-index>
 
 <docgen-api>
-<!-- run docgen to generate docs from the source -->
-<!-- More info: https://github.com/ionic-team/capacitor-docgen -->
+<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### login(...)
+
+```typescript
+login(options: UAEPassOptions) => Promise<{ token: string; }>
+```
+
+| Param         | Type                                                      |
+| ------------- | --------------------------------------------------------- |
+| **`options`** | <code><a href="#uaepassoptions">UAEPassOptions</a></code> |
+
+**Returns:** <code>Promise&lt;{ token: string; }&gt;</code>
+
+--------------------
+
+
+### logout()
+
+```typescript
+logout() => Promise<void>
+```
+
+--------------------
+
+
+### Interfaces
+
+
+#### UAEPassOptions
+
+| Prop              | Type                |
+| ----------------- | ------------------- |
+| **`redirectUri`** | <code>string</code> |
+
 </docgen-api>

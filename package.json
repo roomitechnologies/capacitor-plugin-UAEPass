@@ -1,7 +1,7 @@
 {
   "name": "ionic-login-uae-pass",
   "version": "0.0.1",
-  "description": "plugin to help you intergate uae pass with your app",
+  "description": "plugin to help you integrate uae pass with your app",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",

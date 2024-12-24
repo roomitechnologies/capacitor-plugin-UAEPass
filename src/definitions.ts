@@ -1,3 +1,8 @@
 export interface LoginWithUAEPassPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
+  login(options: UAEPassOptions): Promise<{ token: string }>;
+  logout?(): Promise<void>;
+}
+
+export interface UAEPassOptions {
+  redirectUri: string;
 }

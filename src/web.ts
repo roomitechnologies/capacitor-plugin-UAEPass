@@ -1,10 +1,15 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { LoginWithUAEPassPlugin } from './definitions';
+import type { LoginWithUAEPassPlugin, UAEPassOptions } from './definitions';
 
 export class LoginWithUAEPassWeb extends WebPlugin implements LoginWithUAEPassPlugin {
-  async echo(options: { value: string }): Promise<{ value: string }> {
-    console.log('ECHO', options);
-    return options;
+  async login(options: UAEPassOptions): Promise<{ token: string }> {
+    console.log('Web login called', options);
+    // Simulate a login flow
+    return { token: 'dummy-web-token' };
+  }
+
+  async logout(): Promise<void> {
+    console.log('Web logout called');
   }
 }
