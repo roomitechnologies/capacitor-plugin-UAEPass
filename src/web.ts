@@ -1,13 +1,24 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { LoginWithUAEPassPlugin, UAEPassOptions } from './definitions';
+import type { LoginWithUAEPassPlugin } from './definitions';
 
 export class LoginWithUAEPassWeb extends WebPlugin implements LoginWithUAEPassPlugin {
-  async login(options: UAEPassOptions): Promise<{ token: string }> {
-    console.log('Web login called', options);
-    // Simulate a login flow
-    return { token: 'dummy-web-token' };
+  initialize(): Promise<void> {
+    throw new Error('Method not implemented.');
   }
+  async login(): Promise<{ accessToken: string; userInfo: { uuid: string; firstName: string; lastName: string; email: string; } }> {
+    console.log('Web login called');
+    // Simulate a login flow
+    return {
+      accessToken: 'dummy-web-access-token',
+      userInfo: {
+        uuid: 'dummy-uuid',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john.doe@example.com'
+      }
+    };
+  } 
 
   async logout(): Promise<void> {
     console.log('Web logout called');

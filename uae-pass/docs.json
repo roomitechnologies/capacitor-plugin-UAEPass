@@ -1,0 +1,60 @@
+{
+  "api": {
+    "name": "LoginWithUAEPassPlugin",
+    "slug": "loginwithuaepassplugin",
+    "docs": "",
+    "tags": [],
+    "methods": [
+      {
+        "name": "login",
+        "signature": "(options: UAEPassOptions) => Promise<{ token: string; }>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "",
+            "type": "UAEPassOptions"
+          }
+        ],
+        "returns": "Promise<{ token: string; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [
+          "UAEPassOptions"
+        ],
+        "slug": "login"
+      },
+      {
+        "name": "logout",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "logout"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "UAEPassOptions",
+      "slug": "uaepassoptions",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "redirectUri",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "typeAliases": [],
+  "pluginConfigs": []
+}
