@@ -1,0 +1,1 @@
+pod 'UAEPassClient', :path => './LocalPods/UAEPassClient'
