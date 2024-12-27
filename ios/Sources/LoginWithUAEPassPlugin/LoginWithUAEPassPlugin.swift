@@ -1,7 +1,7 @@
 // ios/Plugin/UaePassPlugin.swift
 import Foundation
 import Capacitor
-import UAEPassClient
+import UAEPassClient 
 
 @objc(UaePassPlugin)
 public class UaePassPlugin: CAPPlugin {
