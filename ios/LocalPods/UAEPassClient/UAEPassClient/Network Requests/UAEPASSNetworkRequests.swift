@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Alamofire
 
 @objc public class UAEPASSNetworkRequests: NSObject {
     
