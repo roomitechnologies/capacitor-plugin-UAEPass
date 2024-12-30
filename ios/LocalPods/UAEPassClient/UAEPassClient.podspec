@@ -7,11 +7,11 @@ Pod::Spec.new do |s|
 UAEPassPOD framework an abstract framewok to integrate any SP with UAEPASS application.
                        DESC
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'mustafa dabah' => 'mdabah@snowheap.com' }
-  s.source           = { :git => ".git", :tag => s.version.to_s }
+  s.author           = { 'Mustafa Dabah' => 'mdabah@snowheap.com' }
   s.ios.deployment_target = '13.0'
   s.swift_version = '5'
   s.source_files = 'UAEPassClient/**/*.{swift,plist}'
+  s.source       = { :git => "https://github.com/roomitechnologies/capacitor-uae-pass", :tag => "#{s.version}" }
   s.resources = 'UAEPassClient/**/*.*'
   s.static_framework = true
 # Network

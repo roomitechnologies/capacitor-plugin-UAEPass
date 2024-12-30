@@ -1,12 +1,13 @@
 // ios/Plugin/UaePassPlugin.swift
 import Foundation
 import Capacitor
-import UAEPassClient 
+import UAEPassClient
 
 @objc(UaePassPlugin)
 public class UaePassPlugin: CAPPlugin {
     private var initialized = false
     
+    // Initialize UAE Pass Configuration
     @objc func initialize(_ call: CAPPluginCall) {
         guard let clientId = call.getString("clientId"),
               let clientSecret = call.getString("clientSecret"),
@@ -21,7 +22,7 @@ public class UaePassPlugin: CAPPlugin {
             return
         }
         
-        let env: UAEPassEnvironment
+        let env: UAEPassConfig.Environment
         switch environment {
         case "production":
             env = .production
@@ -50,9 +51,10 @@ public class UaePassPlugin: CAPPlugin {
         )
         
         initialized = true
-        call.resolve()
+        call.resolve(["message": "UAE Pass initialized successfully"])
     }
     
+    // Login Flow
     @objc func login(_ call: CAPPluginCall) {
         guard initialized else {
             call.reject("Plugin not initialized")
@@ -64,8 +66,6 @@ public class UaePassPlugin: CAPPlugin {
             webViewController.completionHandler = { [weak self] result in
                 switch result {
                 case .success(let accessToken):
-                    // Fetch user info using the access token
-                    // This is a placeholder - implement actual UAE Pass API calls
                     call.resolve([
                         "accessToken": accessToken,
                         "userInfo": [
@@ -80,13 +80,13 @@ public class UaePassPlugin: CAPPlugin {
                 }
             }
             
-            // Present the UAE Pass login view controller
             if let viewController = self.bridge?.viewController {
                 let navigationController = UINavigationController(rootViewController: webViewController)
                 viewController.present(navigationController, animated: true)
             }
         }
     }
+
     
     @objc func signDocument(_ call: CAPPluginCall) {
         guard initialized else {
@@ -103,10 +103,44 @@ public class UaePassPlugin: CAPPlugin {
             return
         }
         
-        // Implement document signing logic here
-        // This is a placeholder - implement actual UAE Pass signing flow
+        // Placeholder for signing logic
         call.resolve([
             "signedDocumentUrl": "https://example.com/signed-document.pdf"
         ])
+    }
+    
+    // Handle URL Scheme
+    public override func handleOpenURL(_ notification: Notification) {
+        guard let url = notification.object as? URL else { return }
+        
+        if url.absoluteString.contains(HandleURLScheme.externalURLSchemeSuccess()) {
+            handleSuccess(url: url)
+        } else if url.absoluteString.contains(HandleURLScheme.externalURLSchemeFail()) {
+            handleFailure(url: url)
+        }
+    }
+    
+    private func handleSuccess(url: URL) {
+        if let topViewController = UserInterfaceInfo.topViewController() as? UAEPassWebViewController {
+            topViewController.forceReload()
+        }
+    }
+    
+    private func handleFailure(url: URL) {
+        guard let webViewController = UserInterfaceInfo.topViewController() as? UAEPassWebViewController else {
+            return
+        }
+        webViewController.foreceStop()
+        
+        let alertController = UIAlertController(
+            title: "Login Failed",
+            message: "Unable to login with UAE Pass. Please try again.",
+            preferredStyle: .alert
+        )
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+            webViewController.navigationController?.popViewController(animated: true)
+        }
+        alertController.addAction(okAction)
+        self.bridge?.viewController?.present(alertController, animated: true)
     }
 }
