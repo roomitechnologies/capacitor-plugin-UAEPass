@@ -1,12 +1,18 @@
 
+
 import Foundation
 import Capacitor
 import UAEPassClient
 
-@objc(UaePassPlugin)
-public class UaePassPlugin: CAPPlugin {
+@objc(LoginWithUAEPassPlugin)
+public class LoginWithUAEPassPlugin: CAPPlugin {
     
+    override public func load() {
+            // Plugin load lifecycle
+            print("🔵 UAE Pass Plugin - Plugin loaded")
+        }
     @objc func initialize(_ call: CAPPluginCall) {
+        print("test mustafa")
         // Basic initialization exactly like docs
         UAEPASSRouter.shared.spConfig = SPConfig(
             redirectUriLogin: "roomi://login",
@@ -29,9 +35,13 @@ public class UaePassPlugin: CAPPlugin {
     @objc func login(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
             let webViewController = UAEPassWebViewController()
-            if let viewController = self.bridge?.viewController {
+              if let viewController = self.bridge?.viewController {
+                print("🔵 UAE Pass - Presenting web view")
                 let navigationController = UINavigationController(rootViewController: webViewController)
                 viewController.present(navigationController, animated: true)
+            } else {
+                print("❌ UAE Pass - No view controller available")
+                call.reject("No view controller available")
             }
         }
     }
