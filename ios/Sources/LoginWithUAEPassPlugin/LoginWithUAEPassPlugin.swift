@@ -1,5 +1,3 @@
-
-
 import Foundation
 import Capacitor
 import UAEPassClient
@@ -8,74 +6,88 @@ import UAEPassClient
 public class LoginWithUAEPassPlugin: CAPPlugin {
     
     override public func load() {
-            // Plugin load lifecycle
-            print("🔵 UAE Pass Plugin - Plugin loaded")
-        }
+        print("🔵 UAE Pass Plugin - Plugin loaded")
+        NotificationCenter.default.addObserver(self, selector: #selector(handleOpenURL(_:)), name: Notification.Name(CAPNotifications.URLOpen.name()), object: nil)
+    }
+
     @objc func initialize(_ call: CAPPluginCall) {
-        print("test mustafa")
-        // Basic initialization exactly like docs
+        print("🔵 UAE Pass Plugin - Initializing SDK")
+
+        let state = randomString(length: 24)
+        let scope = "urn:uae:digitalid:profile"
+
         UAEPASSRouter.shared.spConfig = SPConfig(
             redirectUriLogin: "roomi://login",
-            scope: "urn:uae:digitalid:profile",
-            state: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            scope: scope,
+            state: state,
             successSchemeURL: "roomi://login",
             failSchemeURL: "roomi://fail-login",
             signingScope: "urn:safelayer:eidas:sign:process:document"
         )
-        
+
         UAEPASSRouter.shared.environmentConfig = UAEPassConfig(
             clientID: "sandbox_stage",
-            clientSecret: "sandbox_stage",
-            env: .qa
+            clientSecret: "sandbox_stage", // Add client secret if required
+            env: .staging
         )
-        
+
         call.resolve()
     }
-    
+
+    func randomString(length: Int) -> String {
+        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return String((0..<length).map{ _ in letters.randomElement()! })
+    }
+
     @objc func login(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
-            let webViewController = UAEPassWebViewController()
-              if let viewController = self.bridge?.viewController {
-                print("🔵 UAE Pass - Presenting web view")
-                let navigationController = UINavigationController(rootViewController: webViewController)
-                viewController.present(navigationController, animated: true)
+            if let webVC = UAEPassWebViewController.instantiate() as? UAEPassWebViewController {
+                webVC.urlString = UAEPassConfiguration.getServiceUrlForType(serviceType: .loginURL)
+
+                let topViewController = self.bridge?.viewController
+
+                webVC.onUAEPassSuccessBlock = { (code: String?) in
+                    topViewController?.dismiss(animated: true)
+                    if let code = code {
+                        call.resolve(["accessCode": code])
+                    } else {
+                        call.reject("Failed to get access code", "400", nil)
+                    }
+                }
+
+                webVC.onUAEPassFailureBlock = { (response: String?) in
+                    topViewController?.dismiss(animated: true)
+                    call.reject("Authentication failed", response ?? "Unknown error", nil)
+                }
+
+                webVC.onDismiss = {
+                    topViewController?.dismiss(animated: true)
+                    call.reject("Authentication canceled", "User canceled the flow", nil)
+                }
+
+                webVC.reloadwithURL(url: webVC.urlString)
+                topViewController?.present(webVC, animated: true)
             } else {
-                print("❌ UAE Pass - No view controller available")
-                call.reject("No view controller available")
+                call.reject("Failed to initialize web view", "500", nil)
             }
         }
     }
-    
-    public func handleOpenURL(_ notification: Notification) {
-        guard let url = notification.object as? URL else { return }
-        print("<><><><> appDelegate URL : \(url.absoluteString)")
-        
+
+    @objc public func handleOpenURL(_ notification: Notification) {
+        guard let url = notification.object as? URL else {
+            print("❌ UAE Pass Plugin - handleOpenURL: Invalid URL")
+            return
+        }
+
+        print("🔵 UAE Pass Plugin - handleOpenURL: Received URL - \(url.absoluteString)")
+
         if url.absoluteString.contains(HandleURLScheme.externalURLSchemeSuccess()) {
-            if let topViewController = UserInterfaceInfo.topViewController() {
-                if let webViewController = topViewController as? UAEPassWebViewController {
-                    webViewController.forceReload()
-                }
-            }
+            print("🔵 UAE Pass Plugin - handleOpenURL: Success URL detected")
+            self.notifyListeners("loginSuccess", data: [:])
         }
         else if url.absoluteString.contains(HandleURLScheme.externalURLSchemeFail()) {
-            guard let webViewController = UserInterfaceInfo.topViewController() as? UAEPassWebViewController else {
-                return
-            }
-            webViewController.foreceStop()
-            
-            let alertController = UIAlertController(
-                title: "Failed to login with UAE PASS Login",
-                message: "Try again later",
-                preferredStyle: .actionSheet
-            )
-            
-            let okAction = UIAlertAction(title: "OK", style: .default) { _ in
-                NSLog("OK Pressed")
-                webViewController.navigationController?.popViewController(animated: true)
-            }
-            
-            alertController.addAction(okAction)
-            self.bridge?.viewController?.present(alertController, animated: true, completion: nil)
+            print("🔵 UAE Pass Plugin - handleOpenURL: Failure URL detected")
+            self.notifyListeners("loginFailure", data: [:])
         }
     }
 }
