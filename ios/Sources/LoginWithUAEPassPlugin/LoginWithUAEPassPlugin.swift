@@ -14,7 +14,7 @@ public class LoginWithUAEPassPlugin: CAPPlugin {
         print("🔵 UAE Pass Plugin - Initializing SDK")
 
         let state = randomString(length: 24)
-        let scope = "urn:uae:digitalid:profile"
+        let scope = "urn:uae:digitalid:profile:general urn:uae:digitalid:profile:general:profileType urn:uae:digitalid:profile:general:unifiedId"
 
         UAEPASSRouter.shared.spConfig = SPConfig(
             redirectUriLogin: "roomi://login",
