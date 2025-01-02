@@ -35,7 +35,7 @@ import UIKit
             let urlSchemes = urlTypeDictionary["CFBundleURLSchemes"] as? [AnyObject],
             //TODO: VERIFY if we will return nil or empty string.
             let externalURLScheme = urlSchemes.first as? String else { return "" }
-        return "\(externalURLScheme)://uaePassSuccess"
+        return "\(externalURLScheme)://login"
     }
     
     @objc public static func externalURLSchemeFail() -> String {
@@ -44,6 +44,6 @@ import UIKit
             let urlSchemes = urlTypeDictionary["CFBundleURLSchemes"] as? [AnyObject],
             //TODO: VERIFY if we will return nil or empty string.
             let externalURLScheme = urlSchemes.first as? String else { return "" }
-        return "\(externalURLScheme)://uaePassFail"
+        return "\(externalURLScheme)://fail-login"
     }
 }
