@@ -1,47 +1,45 @@
-# ionic-login-uae-pass
+# Capacitor UAE Pass Plugin
 
-plugin to help you intergate uae pass with your app
+A Capacitor plugin for integrating UAE Pass authentication into your mobile app. This plugin allows users to log in using their UAE Pass credentials and handles the authentication flow seamlessly.
 
-## Install
+---
+
+## **Installation**
+
+Follow these steps to install and configure the Capacitor UAE Pass Plugin in your project.
+
+---
+
+### **1. Install the dependencies**
+
+Run the following commands to install the plugin and sync your Capacitor project:
 
 ```bash
-npm install ionic-login-uae-pass
-npx cap sync
-```
+npm install
 
-## API
+Build the Plugin
+Build the plugin to ensure everything is set up correctly:
+npm run build
 
-<docgen-index>
+Install the Plugin in Your Project
+Navigate to your project directory and install the plugin using the local path:
 
-* [`initialize(...)`](#initialize)
-* [`login()`](#login)
+cd /path/to/your/project
+npm install ../../ionic-login-uae-pass --legacy-peer-deps
 
-</docgen-index>
+Build the iOS Project
+Build the iOS project to generate the necessary files. This step also automates the addition of the UAEPassClient pod to the Podfile.
 
-<docgen-api>
-<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+npm run build:ios
 
-### initialize(...)
+What Happens During npm run build:ios?
+The project is built.
 
-```typescript
-initialize(options: { clientId: string; clientSecret: string; environment: 'production' | 'qa' | 'dev'; redirectUri: string; scope: string; state: string; successScheme: string; failScheme: string; signingScope: string; }) => Promise<void>
-```
+The iOS platform is synced.
 
-| Param         | Type                                                                                                                                                                                                                     |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **`options`** | <code>{ clientId: string; clientSecret: string; environment: 'production' \| 'qa' \| 'dev'; redirectUri: string; scope: string; state: string; successScheme: string; failScheme: string; signingScope: string; }</code> |
+A post-build script automatically adds the UAEPassClient pod to the Podfile.
 
---------------------
+The pod install --repo-update command is run to install the pods.
 
-
-### login()
-
-```typescript
-login() => Promise<{ accessToken: string; userInfo: { uuid: string; firstName: string; lastName: string; email: string; }; }>
-```
-
-**Returns:** <code>Promise&lt;{ accessToken: string; userInfo: { uuid: string; firstName: string; lastName: string; email: string; }; }&gt;</code>
-
---------------------
-
-</docgen-api>
+Build the Xcode Project
+Open the Xcode project and build it:
