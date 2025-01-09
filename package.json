@@ -1,5 +1,5 @@
 {
-  "name": "ionic-login-uae-pass",
+  "name": "capacitor-plugin-uaepass",
   "version": "0.0.1",
   "description": "plugin to help you integrate uae pass with your app",
   "main": "dist/plugin.cjs.js",
