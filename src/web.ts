@@ -10,13 +10,28 @@ export class LoginWithUAEPassWeb extends WebPlugin implements LoginWithUAEPassPl
       resolve();
     });
   }
-  async login(): Promise<{ accessToken: string; userInfo: { uuid: string; firstName: string; lastName: string; email: string; } }> {
+  async login(): Promise<{ accessToken: string; userInfo: { uuid: string; firstName: string; lastName: string; email: string; }; }> {
     console.log('Web login called');
-    // Simulate a login flow
+
+    const ANDROID_LINK = 'https://roomi-app-dev.vercel.app/login';
+    const UAEPASS_SCOPE = 'scope=urn:uae:digitalid:profile:general urn:uae:digitalid:profile:general:profileType urn:uae:digitalid:profile:general:unifiedId'
+
+    const baseParams = new URLSearchParams({
+      response_type: 'code',
+      client_id: 'sandbox_stage',
+      scope: UAEPASS_SCOPE,
+      state: "HnlHOJTkTb66Y5H",
+      redirect_uri: ANDROID_LINK
+    });
+
+    const uaePassUrl = `https://stg-id.uaepass.ae/idshub/authorize?${baseParams.toString()}&acr_values=urn:safelayer:tws:policies:authentication:level:low`;
+
+    window.location.href = uaePassUrl;
+
     return {
-      accessToken: 'dummy-web-access-token',
+      accessToken: 'dummyAccessToken',
       userInfo: {
-        uuid: 'dummy-uuid',
+        uuid: 'dummyUUID',
         firstName: 'John',
         lastName: 'Doe',
         email: 'john.doe@example.com'
